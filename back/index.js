@@ -6,6 +6,9 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 
+// Routers
+const router = require("./router/router.js");
+
 // Variables
 const PORT = process.env.PORT || 5000;
 
@@ -15,6 +18,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
+
+app.use("/api", router);
 
 const startServer = async () => {
     try {
