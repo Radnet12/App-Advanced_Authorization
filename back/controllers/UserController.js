@@ -17,35 +17,42 @@ class UserController {
 
             return res.json(userData);
         } catch (e) {
-            console.log(e);
+            next(e);
         }
     }
 
     async login(req, res, next) {
         try {
         } catch (e) {
-            console.log(e);
+            next(e);
         }
     }
 
     async logout(req, res, next) {
         try {
         } catch (e) {
-            console.log(e);
+            next(e);
         }
     }
 
     async activation(req, res, next) {
         try {
+            // Getting params
+            const activationLink = req.params?.link;
+
+            await UserService.activate(activationLink);
+
+            // redirecting to the main site
+            return res.redirect(process.env.APP_URL);
         } catch (e) {
-            console.log(e);
+            next(e);
         }
     }
 
     async refresh(req, res, next) {
         try {
         } catch (e) {
-            console.log(e);
+            next(e);
         }
     }
 
@@ -53,7 +60,7 @@ class UserController {
         try {
             res.json(["123", "1234"]);
         } catch (e) {
-            console.log(e);
+            next(e);
         }
     }
 }

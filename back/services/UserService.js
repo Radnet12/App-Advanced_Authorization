@@ -12,6 +12,9 @@ const UserModel = require("../models/UserModel");
 // DTOs
 const UserDto = require("../dtos/UserDto");
 
+// Exceptions
+const ApiError = require("../exceptions/ApiError");
+
 class UserService {
     async registration(email, password) {
         // Checking if such email is already exist in DB
@@ -19,7 +22,7 @@ class UserService {
 
         // If exist throw error
         if (candidate) {
-            throw new Error(
+            throw ApiError.BadRequest(
                 `Пользователь с почтовым адресом ${email} уже существует!`
             );
         }
@@ -54,6 +57,22 @@ class UserService {
             ...tokens,
             user: userDto,
         };
+    }
+
+    async activate(activationLink) {
+        // Checking if user has activation link
+        const user = await UserModel.findOne({ activationLink });
+
+        // if no throw error
+        if (!user) {
+            throw ApiError.BadRequest("Неккоректная ссылка для активации!");
+        }
+
+        // activating user
+        user.isActivated = true;
+
+        // save user
+        await user.save();
     }
 }
 
