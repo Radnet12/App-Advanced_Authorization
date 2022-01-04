@@ -74,6 +74,77 @@ class UserService {
         // save user
         await user.save();
     }
+
+    async login(email, password) {
+        const user = await UserModel.findOne({ email });
+
+        if (!user) {
+            throw ApiError.BadRequest(
+                `Пользователь с почтовым адресом ${email} не найден!`
+            );
+        }
+
+        const isPasswordEqual = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordEqual) {
+            throw ApiError.BadRequest("Неверный пароль!");
+        }
+
+        // Returning from DTO all info about USER except password
+        const userDto = new UserDto(user);
+        const tokens = TokenService.generateTokens({ ...userDto });
+
+        // Save token to DB
+        await TokenService.saveToken(userDto.id, tokens.refreshToken);
+
+        return {
+            ...tokens,
+            user: userDto,
+        };
+    }
+
+    async logout(refreshToken) {
+        // Deleting token
+        const token = await TokenService.removeToken(refreshToken);
+
+        return token;
+    }
+
+    async refresh(refreshToken) {
+        // Checking if token exist
+        if (!refreshToken) {
+            throw ApiError.UnauthorizedError();
+        }
+
+        // Validating refresh Token
+        const userData = TokenService.validateRefreshToken(refreshToken);
+
+        // Checking if token is in DB
+        const tokenData = await TokenService.findRefreshToken(refreshToken);
+
+        if (!userData || !tokenData) {
+            throw ApiError.UnauthorizedError();
+        }
+
+        const user = await UserModel.findById(userData.id);
+        // Returning from DTO all info about USER except password
+        const userDto = new UserDto(user);
+        const tokens = TokenService.generateTokens({ ...userDto });
+
+        // Save token to DB
+        await TokenService.saveToken(userDto.id, tokens.refreshToken);
+
+        return {
+            ...tokens,
+            user: userDto,
+        };
+    }
+
+    async getAllUsers() {
+        // getting all users from DB
+        const users = await UserModel.find();
+        return users;
+    }
 }
 
 module.exports = new UserService();
