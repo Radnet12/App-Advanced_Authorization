@@ -1,0 +1,29 @@
+.wrapper {
+    position: relative;
+    margin-bottom: 45px;
+}
+
+.label {
+}
+
+.span {
+    position: absolute;
+    top: -1.5em;
+    left: 0;
+    font-size: 1.4rem;
+}
+
+.input {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 400px;
+    min-height: 40px;
+    border: 1px solid #1a1e21;
+    border-radius: 4px;
+    text-overflow: ellipsis;
+    color: #000;
+    background-color: transparent;
+}

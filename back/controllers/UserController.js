@@ -98,7 +98,7 @@ class UserController {
                 httpOnly: true,
             });
 
-            return res.json(token);
+            return res.json(userData);
         } catch (e) {
             next(e);
         }

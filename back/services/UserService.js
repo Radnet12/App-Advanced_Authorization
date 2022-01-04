@@ -117,7 +117,7 @@ class UserService {
         }
 
         // Validating refresh Token
-        const userData = TokenService.validateRefreshToken(refreshToken);
+        const userData = await TokenService.validateRefreshToken(refreshToken);
 
         // Checking if token is in DB
         const tokenData = await TokenService.findRefreshToken(refreshToken);

@@ -7,6 +7,6 @@ import { IUser } from "../models/IUser";
 
 export class UserService {
     static async getUsers(): Promise<AxiosResponse<IUser[]>> {
-        return $api.post<IUser[]>("/users");
+        return $api.get<IUser[]>("/users");
     }
 }
